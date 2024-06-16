@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sampling Innovations Europe</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            padding: 0;
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #e8597836;
+            flex-direction: column;
+        }
+
+        header {
+            background-color: #ffffff;
+            padding: 1rem 2rem;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo-container {
+            text-align: center;
+        }
+
+        .logo-container img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .logo-title {
+            color: #000;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .logo-subtitle {
+            color: #000;
+            font-size: 16px;
+            font-weight: normal;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            padding: 20px;
+            border: 1px solid #f1eaea;
+            border-radius: 10px;
+            background-color: #ffffff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 80px; /* Reducir la distancia entre la cabecera y el contenedor */
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 10px;
+            border: 1px solid #d955ee;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: #d955ee;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        #submit {
+            border: none;
+            background-color: #e85978;
+            color: white;
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        #submit:hover {
+            background-color: #45a049;
+        }
+
+        #loading-message {
+            display: none;
+            color: #007bff;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        @media (max-width: 600px) {
+            header {
+                padding: 0.5rem 1rem;
+            }
+            header h1 {
+                font-size: 1.2rem;
+            }
+            .container {
+                padding: 10px;
+                margin-top: 60px;
+            }
+            input, select, textarea {
+                padding: 10px;
+                font-size: 14px;
+            }
+            #submit {
+                padding: 10px;
+                font-size: 14px;
+            }
+        }
+        
+        /* Estilo para la ventana emergente */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            max-width: 500px;
+            background-color: white;
+            border: 2px solid #d955ee;;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+        }
+        .modal p {
+            margin: 20px 0;
+        }
+        .modal button {
+            background-color: #e85978;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <img src="logo.jpg" alt="Sampling Innovations Europe">
+            <div class="logo-text">  
+            </div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <form method="post" action="" name="incidencias-form">
+            <div style="display: flex; justify-content: space-between;">
+                <input type="text" id="fecha" name="fecha" readonly>
+                <input type="text" id="hora" name="hora" readonly>
+            </div>
+
+            <input type="text" name="contacto" placeholder="¿Quién solicita el servicio?" autocomplete="off" required>
+            <input type="email" name="email" placeholder="Indica un correo electrónico" autocomplete="off" required>
+            <input type="text" name="telefono" placeholder="Indica un teléfono de contacto" pattern="[0-9]*" title="Debe tener 9 dígitos" required maxlength="9" inputmode="numeric" autocomplete="off">
+            <textarea name="problema" style="resize: none;" placeholder="Descripción del problema o petición" required rows="3"></textarea>
+            
+            <div>
+                <select id="mod" name="equipacion" required>
+                    <option value="" disabled selected>Seleccionar que está afectado por el problema</option>
+                    <option value="Red">Red</option>
+                    <option value="Portátil">Portátil</option>
+                    <option value="PC">PC</option>
+                    <option value="Impresora">Impresora</option>
+                    <option value="Monitor">Monitor</option>
+                    <option value="Pizarra">Pizarra</option>
+                    <option value="Webcam">Webcam</option>
+                    <option value="Accesorios">Accesorios</option>
+                </select>
+            </div>
+            <div>
+                
+                
+                <select id="mod" name="tipo_urgencia" required>
+                    <option value="" disabled selected>Seleccionar tipo de urgencia</option>
+                    <option value="crítico">Crítico</option>
+                    <option value="urgente">Urgente</option>
+                    <option value="visita_tecnica">Cuando venga el técnico</option>
+                </select>
+            </div>
+            
+            <input type="submit" value="Enviar" id="submit">
+            <div id="loading-message">Un momento, enviando información...</div>
+        </form>
+    </div>
+
+    <!-- Ventana emergente -->
+    <div id="modal" class="modal">
+        <p>Los datos han sido enviados correctamente.</p>
+        <button onclick="closeModal()">Cerrar</button>
+    </div>
+ 
+    <script>
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbwXU6uu-a-Df4yAlmOn9gXXkWjaTN3amskTI5J58rvNnID0K3ytX9fKQ6lb9jXB7g0NoA/exec';
+        const form = document.forms['incidencias-form'];
+        
+        // Mostrar fecha y hora actuales
+        // Función para actualizar la fecha y hora
+        function updateDateTime() {
+            const fecha = new Date();
+            const dia = String(fecha.getDate()).padStart(2, '0');
+            const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+            const año = fecha.getFullYear();
+            const hora = String(fecha.getHours()).padStart(2, '0');
+            const minutos = String(fecha.getMinutes()).padStart(2, '0');
+
+            document.getElementById('fecha').value = `${dia}/${mes}/${año}`;
+            document.getElementById('hora').value = `${hora}:${minutos}`;
+        }
+        
+         // Actualizar fecha y hora al cargar la página y cada minuto
+         updateDateTime();
+         setInterval(updateDateTime, 15000);
+
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+            document.getElementById('loading-message').style.display = 'block'; // Mostrar mensaje de espera
+            fetch(scriptURL, { method: 'POST', body: new FormData(form) })
+                .then(response => {
+                    document.getElementById('loading-message').style.display = 'none'; // Ocultar mensaje de espera
+                    showModal(); // Mostrar modal de éxito
+                    form.reset();
+                })
+                .catch(error => {
+                    console.error('Error!', error.message);
+                    document.getElementById('loading-message').style.display = 'none'; // Ocultar mensaje de espera
+                });
+        });
+
+        function showModal() {
+            const modal = document.getElementById('modal');
+            modal.style.display = 'block';
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('modal');
+            modal.style.display = 'none';
+        }
+
+        // Validación del correo electrónico
+        document.querySelector('input[name="email"]').addEventListener('input', function () {
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailPattern.test(this.value)) {
+                this.setCustomValidity('Por favor, introduce un correo electrónico válido.');
+            } else {
+                this.setCustomValidity('');
+            }
+        });
+    </script>
+</body>
+</html>
